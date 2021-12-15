@@ -59,15 +59,4 @@ func main() {
 
 	err = srv.ListenAndServe()
 	log.Fatal(err)
-
-	// http.HandleFunc("/", handlers.Repo.Home)
-	// http.HandleFunc("/about", handlers.Repo.About)
-	// http.HandleFunc("/divide", Divide)
-
-	// start web server that listens for requests
-	// listen to particular port of my computer (In this case, listen on 8080)
-	// _ = http.ListenAndServe(portNumber, nil)
-	// access localhost:8080 in browser
 }
-
-// command in terminal: go run cmd/web/*.go
