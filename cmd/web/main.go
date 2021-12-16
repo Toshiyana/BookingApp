@@ -42,7 +42,7 @@ func main() {
 	app.TemplateCache = tc
 	// In develop mode, Usecache sets false because of reloding templates. <- check templates changed.
 	// In release mode, Usecashe sets true because of not reloding templates.
-	app.UseCache = true
+	app.UseCache = false
 
 	repo := handlers.NewRepo(&app)
 	handlers.NewHandlers(repo)
