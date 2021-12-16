@@ -27,7 +27,7 @@ func AddDefaultData(td *models.TemplateData) *models.TemplateData {
 }
 
 // RenderTemplate renders templates using html/template
-func RenderTamplate(w http.ResponseWriter, tmpl string, td *models.TemplateData) {
+func RenderTemplate(w http.ResponseWriter, tmpl string, td *models.TemplateData) {
 
 	var tc map[string]*template.Template
 
