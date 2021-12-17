@@ -6,9 +6,9 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Toshiyana/BookingApp/pkg/config"
-	"github.com/Toshiyana/BookingApp/pkg/models"
-	"github.com/Toshiyana/BookingApp/pkg/render"
+	"github.com/Toshiyana/BookingApp/internal/config"
+	"github.com/Toshiyana/BookingApp/internal/models"
+	"github.com/Toshiyana/BookingApp/internal/render"
 )
 
 // Repo is the repository used by the handlers

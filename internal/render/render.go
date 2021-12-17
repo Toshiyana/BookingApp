@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"path/filepath"
 
-	"github.com/Toshiyana/BookingApp/pkg/config"
-	"github.com/Toshiyana/BookingApp/pkg/models"
+	"github.com/Toshiyana/BookingApp/internal/config"
+	"github.com/Toshiyana/BookingApp/internal/models"
 	"github.com/justinas/nosurf"
 )
 
