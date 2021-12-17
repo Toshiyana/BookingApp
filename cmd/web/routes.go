@@ -17,7 +17,7 @@ func routes(app *config.AppConfig) http.Handler {
 	// Middleware allows you to process a request as it comes into your Web application
 	// and perform some action on it.
 	mux.Use(middleware.Recoverer)
-	mux.Use(NoSurf)
+	mux.Use(NoSurf) // turn on a middleware
 	mux.Use(SessionLoad)
 
 	mux.Get("/", http.HandlerFunc(handlers.Repo.Home))
@@ -25,7 +25,10 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Get("/generals-quarters", http.HandlerFunc(handlers.Repo.Generals))
 	mux.Get("/majors-suite", http.HandlerFunc(handlers.Repo.Majors))
 	mux.Get("/make-reservation", http.HandlerFunc(handlers.Repo.Reservation))
+
 	mux.Get("/search-availability", http.HandlerFunc(handlers.Repo.Availability))
+	mux.Post("/search-availability", http.HandlerFunc(handlers.Repo.PostAvailability))
+
 	mux.Get("/contact", http.HandlerFunc(handlers.Repo.Contact))
 
 	// create a file server, a place to get static files
