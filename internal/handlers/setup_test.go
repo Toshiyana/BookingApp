@@ -66,7 +66,7 @@ func getRoutes() http.Handler {
 	// Middleware allows you to process a request as it comes into your Web application
 	// and perform some action on it.
 	mux.Use(middleware.Recoverer)
-	mux.Use(NoSurf) // turn on a middleware
+	// mux.Use(NoSurf) // When testing handlers_test.go, you don't have to use NoSurf because of CSRF
 	mux.Use(SessionLoad)
 
 	mux.Get("/", http.HandlerFunc(Repo.Home))
