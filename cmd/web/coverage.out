@@ -1,0 +1,10 @@
+mode: set
+github.com/Toshiyana/BookingApp/cmd/web/main.go:25.13,27.16 2 0
+github.com/Toshiyana/BookingApp/cmd/web/main.go:31.2,40.16 4 0
+github.com/Toshiyana/BookingApp/cmd/web/main.go:27.16,29.3 1 0
+github.com/Toshiyana/BookingApp/cmd/web/main.go:43.18,61.16 10 1
+github.com/Toshiyana/BookingApp/cmd/web/main.go:66.2,76.12 6 1
+github.com/Toshiyana/BookingApp/cmd/web/main.go:61.16,64.3 2 0
+github.com/Toshiyana/BookingApp/cmd/web/middleware.go:10.45,22.2 3 1
+github.com/Toshiyana/BookingApp/cmd/web/middleware.go:25.50,27.2 1 1
+github.com/Toshiyana/BookingApp/cmd/web/routes.go:13.49,43.2 18 1
