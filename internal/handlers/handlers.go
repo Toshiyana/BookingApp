@@ -3,11 +3,11 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/Toshiyana/BookingApp/internal/config"
 	"github.com/Toshiyana/BookingApp/internal/forms"
+	"github.com/Toshiyana/BookingApp/internal/helpers"
 	"github.com/Toshiyana/BookingApp/internal/models"
 	"github.com/Toshiyana/BookingApp/internal/render"
 )
@@ -35,8 +35,8 @@ func NewHandlers(r *Repository) {
 // All of the handlers access to the repository using receivers(m *Repository)
 // Home is the home page handler
 func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
-	remoteIP := r.RemoteAddr // store visitor's ip addres
-	m.App.Session.Put(r.Context(), "remote_ip", remoteIP)
+	// remoteIP := r.RemoteAddr // store visitor's ip addres
+	// m.App.Session.Put(r.Context(), "remote_ip", remoteIP)
 
 	render.RenderTemplate(w, r, "home.page.tmpl", &models.TemplateData{})
 }
@@ -44,15 +44,15 @@ func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
 // About is the about page handler
 func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
 	// perform some logic
-	stringMap := make(map[string]string)
-	stringMap["test"] = "Hello, world."
+	// stringMap := make(map[string]string)
+	// stringMap["test"] = "Hello, world."
 
-	remoteIP := m.App.Session.GetString(r.Context(), "remote_ip")
-	stringMap["remote_ip"] = remoteIP
+	// remoteIP := m.App.Session.GetString(r.Context(), "remote_ip")
+	// stringMap["remote_ip"] = remoteIP
 
 	// send the data to the template
 	render.RenderTemplate(w, r, "about.page.tmpl", &models.TemplateData{
-		StringMap: stringMap,
+		// StringMap: stringMap,
 	})
 }
 
@@ -69,7 +69,7 @@ func (m *Repository) Reservation(w http.ResponseWriter, r *http.Request) {
 func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
-		log.Println(err)
+		helpers.ServerError(w, err)
 		return
 	}
 
@@ -136,7 +136,8 @@ func (m *Repository) AvailabilityJSON(w http.ResponseWriter, r *http.Request) {
 	// change to JSON
 	out, err := json.MarshalIndent(resp, "", "     ")
 	if err != nil {
-		log.Println(err)
+		helpers.ServerError(w, err)
+		return
 	}
 
 	fmt.Println(string(out))
@@ -155,7 +156,7 @@ func (m *Repository) Contact(w http.ResponseWriter, r *http.Request) {
 func (m *Repository) ReservationSummary(w http.ResponseWriter, r *http.Request) {
 	reservation, ok := m.App.Session.Get(r.Context(), "reservation").(models.Reservation)
 	if !ok {
-		log.Println("cannot get item from session")
+		m.App.ErrorLog.Println("Can't get error from session")
 		m.App.Session.Put(r.Context(), "error", "cannot get reservation from session")
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
