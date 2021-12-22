@@ -2,8 +2,8 @@ package models
 
 import "time"
 
-// Users is the user model
-type Users struct {
+// User is the user model
+type User struct {
 	ID          int
 	FirstName   string
 	LastName    string
@@ -14,24 +14,24 @@ type Users struct {
 	UpdatedAt   time.Time
 }
 
-// Rooms is the room model
-type Rooms struct {
+// Room is the room model
+type Room struct {
 	ID        int
 	RoomName  string
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
 
-// Restrictions is the restriction model
-type Restrictions struct {
+// Restriction is the restriction model
+type Restriction struct {
 	ID              int
 	RestrictionName string
 	CreatedAt       time.Time
 	UpdatedAt       time.Time
 }
 
-// Reservations is the reservation model
-type Reservations struct {
+// Reservation is the reservation model
+type Reservation struct {
 	ID        int
 	FirstName string
 	LastName  string
@@ -42,7 +42,7 @@ type Reservations struct {
 	RoomID    int
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	Room      Rooms // RoomID associated with Rooms
+	Room      Room // RoomID associated with Rooms
 	// RoomID associated with Rooms, so add Room.
 	// By adding Room, you can include all of the room information in Reservations,
 	// and use room information easily.
@@ -50,7 +50,7 @@ type Reservations struct {
 }
 
 // RoomRestrictions is the room restriction model
-type RoomRestrictions struct {
+type RoomRestriction struct {
 	ID            int
 	StartDate     time.Time
 	EndDate       time.Time
@@ -59,7 +59,7 @@ type RoomRestrictions struct {
 	RestrictionID int
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
-	Room          Rooms        // RoomID associated with Rooms (easily access room information)
-	Reservation   Reservations // ReservationID associated with Reservations (easily access reservation information)
-	Restriction   Restrictions // RestrictionID associated with Restrictions (easily access restriction information)
+	Room          Room        // RoomID associated with Rooms (easily access room information)
+	Reservation   Reservation // ReservationID associated with Reservations (easily access reservation information)
+	Restriction   Restriction // RestrictionID associated with Restrictions (easily access restriction information)
 }
