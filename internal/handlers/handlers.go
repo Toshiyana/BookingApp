@@ -5,11 +5,14 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/Toshiyana/BookingApp/driver"
 	"github.com/Toshiyana/BookingApp/internal/config"
 	"github.com/Toshiyana/BookingApp/internal/forms"
 	"github.com/Toshiyana/BookingApp/internal/helpers"
 	"github.com/Toshiyana/BookingApp/internal/models"
 	"github.com/Toshiyana/BookingApp/internal/render"
+	"github.com/Toshiyana/BookingApp/internal/repository"
+	"github.com/Toshiyana/BookingApp/internal/repository/dbrepo"
 )
 
 // Repo is the repository used by the handlers
@@ -18,12 +21,14 @@ var Repo *Repository
 // Repository is the repository type
 type Repository struct {
 	App *config.AppConfig
+	DB  repository.DatabaseRepo
 }
 
 // NewRepo creates a new repository
-func NewRepo(a *config.AppConfig) *Repository {
+func NewRepo(a *config.AppConfig, db *driver.DB) *Repository {
 	return &Repository{
 		App: a,
+		DB:  dbrepo.NewPostgresRepo(a, db.SQL),
 	}
 }
 
