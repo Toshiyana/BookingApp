@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"testing"
 	"time"
 
 	"github.com/Toshiyana/BookingApp/internal/config"
@@ -24,6 +25,50 @@ var functions = template.FuncMap{}
 var app config.AppConfig
 var session *scs.SessionManager
 var pathToTemplates = "./../../templates"
+
+func TestMain(m *testing.M) {
+	//----------------------------------------------------------------
+	// run() in main.go
+	//----------------------------------------------------------------
+	// what am I going to put in the session
+	gob.Register(models.Reservation{})
+
+	// change this to true when in production
+	app.InProduction = false
+
+	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
+	app.InfoLog = infoLog
+
+	errorLog := log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
+	app.ErrorLog = errorLog
+
+	// use session in handlers
+	session = scs.New()
+	session.Lifetime = 24 * time.Hour // last for 24 hours
+	// set cookie parameters because all session use cookies in one form.
+	session.Cookie.Persist = true
+	session.Cookie.SameSite = http.SameSiteLaxMode
+	session.Cookie.Secure = app.InProduction
+
+	app.Session = session
+
+	tc, err := CreateTestTemplateCache()
+	if err != nil {
+		log.Fatal("cannot create template cache")
+	}
+
+	app.TemplateCache = tc
+	// In develop mode, Usecache sets false because of reloding templates. <- check templates changed.
+	// In release mode, Usecashe sets true because of not reloding templates.
+	app.UseCache = true // In test, not to call CreateTemplateCache() and use pathToTemplates in render.go, set true
+
+	repo := NewTestRepo(&app)
+	NewHandlers(repo)
+	render.NewRenderer(&app)
+	//----------------------------------------------------------------s
+
+	os.Exit(m.Run())
+}
 
 func getRoutes() http.Handler {
 	//----------------------------------------------------------------
@@ -61,7 +106,7 @@ func getRoutes() http.Handler {
 	// In release mode, Usecashe sets true because of not reloding templates.
 	app.UseCache = true // In test, not to call CreateTemplateCache() and use pathToTemplates in render.go, set true
 
-	repo := NewRepo(&app)
+	repo := NewTestRepo(&app)
 	NewHandlers(repo)
 	render.NewRenderer(&app)
 	//----------------------------------------------------------------
