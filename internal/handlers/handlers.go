@@ -3,7 +3,6 @@ package handlers
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -224,24 +223,42 @@ func (m *Repository) PostAvailability(w http.ResponseWriter, r *http.Request) {
 }
 
 type jsonResponse struct {
-	OK      bool   `json:"ok"`
-	Message string `json:"message"`
+	OK        bool   `json:"ok"`
+	Message   string `json:"message"`
+	RoomID    string `json:"room_id"`
+	StartDate string `json:"start_date"`
+	EndDate   string `json:"end_date"`
 }
 
 func (m *Repository) AvailabilityJSON(w http.ResponseWriter, r *http.Request) {
+	sd := r.Form.Get("start")
+	ed := r.Form.Get("end")
+	ri := r.Form.Get("room_id")
+
+	layout := "2006-01-02"
+	startDate, _ := time.Parse(layout, sd)
+	endDate, _ := time.Parse(layout, ed)
+
+	roomID, _ := strconv.Atoi(ri)
+
+	available, _ := m.DB.SearchAvailabilityByDatesByRoomID(roomID, startDate, endDate)
+
 	resp := jsonResponse{
-		OK:      true,
-		Message: "Available!",
+		OK:        available,
+		Message:   "",
+		RoomID:    ri,
+		StartDate: sd,
+		EndDate:   ed,
 	}
 
-	// change to JSON
+	// Change to JSON
 	out, err := json.MarshalIndent(resp, "", "     ")
 	if err != nil {
 		helpers.ServerError(w, err)
 		return
 	}
 
-	fmt.Println(string(out))
+	// fmt.Println(string(out))
 
 	// Create a header that tells what kind of response to the Web brawser that's receiving my response.
 	// parameter "Content-Type": What am I sending and What kind of header is this? (In this case, set "application/json")
