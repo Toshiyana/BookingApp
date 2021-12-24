@@ -33,6 +33,8 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Post("/search-availability", http.HandlerFunc(handlers.Repo.PostAvailability))
 	mux.Post("/search-availability-json", http.HandlerFunc(handlers.Repo.AvailabilityJSON))
 
+	mux.Get("/choose-room/{id}", handlers.Repo.ChooseRoom)
+
 	mux.Get("/contact", http.HandlerFunc(handlers.Repo.Contact))
 
 	// create a file server, a place to get static files
