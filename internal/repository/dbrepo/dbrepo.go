@@ -12,11 +12,22 @@ type postgresDBRepo struct {
 	DB  *sql.DB
 }
 
+type testDBRepo struct {
+	App *config.AppConfig
+	DB  *sql.DB
+}
+
 // If you want to use other kinds of databases, you can create functions.
 // ex: func NewMysqlRepo()
 func NewPostgresRepo(a *config.AppConfig, conn *sql.DB) repository.DatabaseRepo {
 	return &postgresDBRepo{
 		App: a,
 		DB:  conn,
+	}
+}
+
+func NewTestingRepo(a *config.AppConfig) repository.DatabaseRepo {
+	return &testDBRepo{
+		App: a,
 	}
 }
