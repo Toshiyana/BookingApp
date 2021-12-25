@@ -16,11 +16,6 @@ import (
 	"github.com/Toshiyana/BookingApp/internal/models"
 )
 
-type postData struct {
-	key   string
-	value string
-}
-
 var theTests = []struct {
 	name               string
 	url                string
