@@ -20,6 +20,7 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Use(NoSurf) // turn on a middleware
 	mux.Use(SessionLoad)
 
+	// You can remove "http.HandlerFunc()"
 	mux.Get("/", http.HandlerFunc(handlers.Repo.Home))
 	mux.Get("/about", http.HandlerFunc(handlers.Repo.About))
 	mux.Get("/generals-quarters", http.HandlerFunc(handlers.Repo.Generals))
@@ -38,6 +39,8 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Get("/book-room", handlers.Repo.BookRoom)
 
 	mux.Get("/contact", http.HandlerFunc(handlers.Repo.Contact))
+
+	mux.Get("/user/login", handlers.Repo.ShowLogin)
 
 	// create a file server, a place to get static files
 	fileServer := http.FileServer(http.Dir("./static/"))
