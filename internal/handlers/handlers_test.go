@@ -10,7 +10,6 @@ import (
 	"reflect"
 	"strings"
 	"testing"
-	"time"
 
 	"github.com/Toshiyana/BookingApp/driver"
 	"github.com/Toshiyana/BookingApp/internal/models"
@@ -98,45 +97,7 @@ func TestRepository_Reservation(t *testing.T) {
 
 }
 
-// TestRepository_PostReservation can't pass test completly yet.
 func TestRepository_PostReservation(t *testing.T) {
-	// Copying and Pasting the same code in tests is really not good.
-	// In this time, I do that to understand how to write test.
-
-	//----------------------------------------------------------------
-	// make a reservation objection because they were inputed before pages
-	//----------------------------------------------------------------
-	reservation := models.Reservation{
-		StartDate: time.Now(),
-		EndDate:   time.Now(),
-		RoomID:    1,
-	}
-
-	// Test getting the context, and putting the reservation in the session
-	req, _ := http.NewRequest("GET", "/make-reservation", nil)
-	ctx := getCtx(req)
-	req = req.WithContext(ctx)
-
-	rr := httptest.NewRecorder()
-	session.Put(ctx, "reservation", reservation)
-
-	handler := http.HandlerFunc(Repo.PostReservation)
-
-	handler.ServeHTTP(rr, req)
-	if rr.Code != http.StatusOK {
-		t.Errorf("Reservation handler returned wrong response code: got %d, wanted %d", rr.Code, http.StatusOK)
-	}
-
-	// test case where reservation is not in session (reset everything)
-	req, _ = http.NewRequest("GET", "/make-reservation", nil)
-	ctx = getCtx(req)
-	req = req.WithContext(ctx)
-	rr = httptest.NewRecorder()
-
-	handler.ServeHTTP(rr, req)
-	if rr.Code != http.StatusTemporaryRedirect {
-		t.Errorf("Reservation handler returned wrong response code: got %d, wanted %d", rr.Code, http.StatusTemporaryRedirect)
-	}
 	//----------------------------------------------------------------
 	// test for post body
 	//----------------------------------------------------------------
@@ -149,25 +110,25 @@ func TestRepository_PostReservation(t *testing.T) {
 	postedData.Add("phone", "555-555-5555")
 	postedData.Add("room_id", "1")
 
-	req, _ = http.NewRequest("POST", "/make-reservation", strings.NewReader(postedData.Encode()))
-	ctx = getCtx(req)
+	req, _ := http.NewRequest("POST", "/make-reservation", strings.NewReader(postedData.Encode()))
+	ctx := getCtx(req)
 	req = req.WithContext(ctx)
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-	rr = httptest.NewRecorder()
+	rr := httptest.NewRecorder()
 
-	handler = http.HandlerFunc(Repo.PostReservation)
+	handler := http.HandlerFunc(Repo.PostReservation)
 
 	handler.ServeHTTP(rr, req)
 
-	if rr.Code != http.StatusTemporaryRedirect {
-		t.Errorf("PostReservation handler returned wrong response code: got %d, wanted %d", rr.Code, http.StatusTemporaryRedirect)
+	if rr.Code != http.StatusSeeOther {
+		t.Errorf("PostReservation handler returned wrong response code: got %d, wanted %d", rr.Code, http.StatusSeeOther)
 	}
 
-	//----------------------------------------------------------------
+	//----------------------------------------------------------------------------
 	// test for missing post body
-	//----------------------------------------------------------------
+	//----------------------------------------------------------------------------
 	req, _ = http.NewRequest("POST", "/make-reservation", nil)
 	ctx = getCtx(req)
 	req = req.WithContext(ctx)
@@ -282,8 +243,8 @@ func TestRepository_PostReservation(t *testing.T) {
 
 	handler.ServeHTTP(rr, req)
 
-	if rr.Code != http.StatusTemporaryRedirect {
-		t.Errorf("PostReservation handler returned wrong response code for invalid data: got %d, wanted %d", rr.Code, http.StatusTemporaryRedirect)
+	if rr.Code != http.StatusOK {
+		t.Errorf("PostReservation handler returned wrong response code for invalid data: got %d, wanted %d", rr.Code, http.StatusOK)
 	}
 
 	//----------------------------------------------------------------
@@ -334,8 +295,8 @@ func TestRepository_PostReservation(t *testing.T) {
 
 	handler.ServeHTTP(rr, req)
 
-	if rr.Code != http.StatusTemporaryRedirect {
-		t.Errorf("PostReservation handler failed when trying to fail inserting reservation: got %d, wanted %d", rr.Code, http.StatusTemporaryRedirect)
+	if rr.Code != http.StatusSeeOther {
+		t.Errorf("PostReservation handler failed when trying to fail inserting reservation: got %d, wanted %d", rr.Code, http.StatusSeeOther)
 	}
 }
 
