@@ -41,6 +41,7 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Get("/contact", http.HandlerFunc(handlers.Repo.Contact))
 
 	mux.Get("/user/login", handlers.Repo.ShowLogin)
+	mux.Post("/user/login", handlers.Repo.PostShowLogin)
 
 	// create a file server, a place to get static files
 	fileServer := http.FileServer(http.Dir("./static/"))
