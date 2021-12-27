@@ -41,7 +41,8 @@ func main() {
 	fmt.Println("Starting mail listener...")
 	listenForMail()
 
-	fmt.Println(fmt.Sprintf("Starting application on port %s", portNumber))
+	fmt.Printf("Starting application on port %s\n", portNumber)
+	fmt.Printf("http://localhost%s\n", portNumber)
 
 	// Use routes
 	srv := &http.Server{
