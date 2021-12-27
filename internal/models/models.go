@@ -49,6 +49,7 @@ type Reservation struct {
 	// By adding Room, you can include all of the room information in Reservations,
 	// and use room information easily.
 	// (you don't have to do, but you can do if you want to)
+	Processed int
 }
 
 // RoomRestrictions is the room restriction model
