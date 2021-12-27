@@ -49,7 +49,7 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Handle("/static/*", http.StripPrefix("/static/", fileServer))
 
 	mux.Route("/admin", func(mux chi.Router) {
-		mux.Use(Auth) // use middleware
+		// mux.Use(Auth) // use Auth in middleware. In Product mode, uncomment this for security
 		mux.Get("/dashboard", handlers.Repo.AdminDashboard)
 
 		mux.Get("/reservations-all", handlers.Repo.AdminAllReservations)
