@@ -115,26 +115,6 @@ func (m *Repository) Reservation(w http.ResponseWriter, r *http.Request) {
 
 // PostReservation handles the posting of a reservation form
 func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
-	// // Get start date, end date, and roomID which were already inputed in searching availability
-	// reservation, ok := m.App.Session.Get(r.Context(), "reservation").(models.Reservation)
-	// if !ok {
-	// 	m.App.Session.Put(r.Context(), "error", "can't get reservation from session")
-	// 	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
-	// 	return
-	// }
-
-	// err := r.ParseForm()
-	// if err != nil {
-	// 	m.App.Session.Put(r.Context(), "error", "can't parse form!")
-	// 	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
-	// 	return
-	// }
-
-	// reservation.FirstName = r.Form.Get("first_name")
-	// reservation.LastName = r.Form.Get("last_name")
-	// reservation.Phone = r.Form.Get("phone")
-	// reservation.Email = r.Form.Get("email")
-
 	err := r.ParseForm()
 	if err != nil {
 		m.App.Session.Put(r.Context(), "error", "can't parse form!")
@@ -592,8 +572,6 @@ func (m *Repository) AdminShowReservation(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	log.Println(res)
-
 	data := make(map[string]interface{})
 	data["reservation"] = res
 
@@ -602,6 +580,49 @@ func (m *Repository) AdminShowReservation(w http.ResponseWriter, r *http.Request
 		Data:      data,
 		Form:      forms.New(nil),
 	})
+}
+
+func (m *Repository) AdminPostShowReservation(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		// In admin page, you don't have to redirect home page like no-admin.
+		// because admin page is only accessed by administrator
+		helpers.ServerError(w, err)
+		return
+	}
+
+	exploded := strings.Split(r.RequestURI, "/")
+	id, err := strconv.Atoi(exploded[4])
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
+	src := exploded[3]
+
+	stringMap := make(map[string]string)
+	stringMap["src"] = src
+
+	// get the reservation of the id from the database
+	res, err := m.DB.GetReservationByID(id)
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
+	res.FirstName = r.Form.Get("first_name")
+	res.LastName = r.Form.Get("last_name")
+	res.Email = r.Form.Get("email")
+	res.Phone = r.Form.Get("phone")
+
+	err = m.DB.UpdateReservation(res)
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
+	m.App.Session.Put(r.Context(), "flash", "Changes saved")
+	http.Redirect(w, r, fmt.Sprintf("/admin/reservations-%s", src), http.StatusSeeOther)
 }
 
 // AdminReservationCalendar displays the reservation calendar
