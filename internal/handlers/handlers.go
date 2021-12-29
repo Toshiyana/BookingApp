@@ -17,6 +17,7 @@ import (
 	"github.com/Toshiyana/BookingApp/internal/render"
 	"github.com/Toshiyana/BookingApp/internal/repository"
 	"github.com/Toshiyana/BookingApp/internal/repository/dbrepo"
+	"github.com/go-chi/chi"
 )
 
 // Repo the repository used by the handlers
@@ -628,4 +629,12 @@ func (m *Repository) AdminPostShowReservation(w http.ResponseWriter, r *http.Req
 // AdminReservationCalendar displays the reservation calendar
 func (m *Repository) AdminReservationsCalendar(w http.ResponseWriter, r *http.Request) {
 	render.Template(w, r, "admin-reservations-calendar.page.tmpl", &models.TemplateData{})
+}
+
+func (m *Repository) AdminProcessReservation(w http.ResponseWriter, r *http.Request) {
+	id, _ := strconv.Atoi(chi.URLParam(r, "id"))
+	src := chi.URLParam(r, "src")
+	_ = m.DB.UpdateProcessedForReservation(id, 1) // 1: this reservation as processed, which is preserved
+	m.App.Session.Put(r.Context(), "flash", "Reservation marked as processed")
+	http.Redirect(w, r, fmt.Sprintf("/admin/reservations-%s", src), http.StatusSeeOther)
 }
