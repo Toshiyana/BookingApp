@@ -539,12 +539,12 @@ func (m *postgresDBRepo) GetRestrictionsForRoomByDate(roomID int, start, end tim
 		if err != nil {
 			return nil, err
 		}
+
 		restrictions = append(restrictions, r)
 	}
 
 	if err = rows.Err(); err != nil {
 		return nil, err
 	}
-
 	return restrictions, nil
 }
