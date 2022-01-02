@@ -823,7 +823,7 @@ func (m *Repository) AdminPostReservationsCalendar(w http.ResponseWriter, r *htt
 	}
 
 	// now handle new blocks
-	for name, _ := range r.PostForm {
+	for name := range r.PostForm {
 		// log.Println(name)
 		if strings.HasPrefix(name, "add_block") {
 			exploded := strings.Split(name, "_")
