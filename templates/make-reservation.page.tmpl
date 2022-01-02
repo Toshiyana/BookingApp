@@ -8,15 +8,15 @@
                 <h1 class="mt-3">Make Reservation</h1>
                 <p><strong>Reservatoin details</strong><br>
                     Room: {{$res.Room.RoomName}}<br>
-                    Arrival: {{index .StringMap "start_date"}}<br>
-                    Depatrue: {{index .StringMap "end_date"}}
+                    Arrival: {{humanDate $res.StartDate}}<br>
+                    Depatrue: {{humanDate $res.EndDate}}<br>
                 </p>
 
                 <form method="post" action="/make-reservation" class="" novalidate>
                     <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
 
-                    <input type="hidden" name="start_date" value="{{index .StringMap "start_date"}}">
-                    <input type="hidden" name="end_date" value="{{index .StringMap "end_date"}}">
+                    <input type="hidden" name="start_date" value="{{humanDate $res.StartDate}}">
+                    <input type="hidden" name="end_date" value="{{humanDate $res.EndDate}}">
                     <input type="hidden" name="room_id" value="{{$res.RoomID}}">
 
                     <div class="form-group mt-3">
