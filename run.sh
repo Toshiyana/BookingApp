@@ -5,4 +5,5 @@
 # "go build" does not include test files, but "go run" include test files.
 # a && b: when a was successd, implement b
 
-go build -o go-bookingapp cmd/web/*.go && ./go-bookingapp
+go build -o go-bookingapp cmd/web/*.go
+./go-bookingapp -dbname=go-bookingapp -dbuser=toshi -cache=false -production=false

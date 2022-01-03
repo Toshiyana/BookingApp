@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"time"
+	"flag"
 
 	"github.com/Toshiyana/BookingApp/driver"
 	"github.com/Toshiyana/BookingApp/internal/config"
@@ -62,11 +63,32 @@ func run() (*driver.DB, error) {
 	gob.Register(models.RoomRestriction{})
 	gob.Register(map[string]int{})
 
+	// Read flags
+	// Second parameter is default value.
+	inProduction := flag.Bool("production", true, "Application is in production")// default is "true" because of safety
+	useCache := flag.Bool("cache", true, "Use template cache")
+	dbHost := flag.String("dbhost", "localhost", "Database host")// default is "localhost" because you rarely have the database on the same machine as your application server.
+	dbName := flag.String("dbname", "", "Database name")
+	dbUser := flag.String("dbuser", "", "Database user")
+	dbPass := flag.String("dbpass", "", "Database password")
+	dbPort := flag.String("dbport", "5432", "Database port")
+	dbSSL := flag.String("dbssl", "disable", "Database ssl settings (disable, prefer, require)")
+
+	flag.Parse()
+
+	if *dbName == "" || *dbUser == "" {
+		fmt.Println("Missing required flags")
+		os.Exit(1)
+	}
+
 	mailChan := make(chan models.MailData)
 	app.MailChan = mailChan
 
 	// change this to true when in production
-	app.InProduction = false
+	app.InProduction = *inProduction
+	// In develop mode, Usecache sets false because of reloding templates. <- check templates changed.
+	// In release mode, Usecashe sets true because of not reloding templates.
+	app.UseCache = *useCache
 
 	infoLog = log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	app.InfoLog = infoLog
@@ -86,7 +108,8 @@ func run() (*driver.DB, error) {
 
 	// connect to database
 	log.Println("Connecting to database...")
-	db, err := driver.ConnectSQL("host=localhost port=5432 dbname=go-bookingapp user=toshi password=")
+	connectionString := fmt.Sprintf("host=%s port=%s dbname=%s user=%s password=%s sslmode=%s", *dbHost, *dbPort, *dbName, *dbUser, *dbPass, *dbSSL)
+	db, err := driver.ConnectSQL(connectionString)
 	if err != nil {
 		log.Fatal("Cannot connect to database! Dying...")
 	}
@@ -99,9 +122,6 @@ func run() (*driver.DB, error) {
 	}
 
 	app.TemplateCache = tc
-	// In develop mode, Usecache sets false because of reloding templates. <- check templates changed.
-	// In release mode, Usecashe sets true because of not reloding templates.
-	app.UseCache = false
 
 	repo := handlers.NewRepo(&app, db)
 	handlers.NewHandlers(repo)
