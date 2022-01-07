@@ -1,5 +1,5 @@
 # BookingApp
-Booking room app.
+Booking room app with Golang
 
 ## Demo
 ### User Page
