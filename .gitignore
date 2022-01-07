@@ -3,3 +3,5 @@ coverage.out
 .DS_Store
 *.code-workspace
 database.yml
+.env
+data
