@@ -4,8 +4,8 @@
 {{$res := index .Data "reservation"}}
     <div class="container">
         <div class="row">
-            <div class="col">
-                <h1 class="mt-3">Make Reservation</h1>
+            <div class="col ml-5 mr-5">
+                <h1 class="mt-5">Make Reservation</h1>
                 <p><strong>Reservatoin details</strong><br>
                     Room: {{$res.Room.RoomName}}<br>
                     Arrival: {{humanDate $res.StartDate}}<br>
@@ -60,7 +60,10 @@
                     </div>
 
                     <hr>
-                    <input type="submit" class="btn btn-primary" value="Make Reservation">
+
+                    <div class="text-center">
+                        <input type="submit" class="btn btn-primary text-center" value="Make Reservation">
+                    </div>
                 </form>
             </div>
         </div>
