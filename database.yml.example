@@ -1,9 +1,14 @@
 development:
   dialect: postgres
-  database: go-bookingapp
-  user:
-  password:
-  host: 127.0.0.1
+  # database is "POSTGRESQL_DBNAME"
+  database: go-booking
+  # user is "POSTGRESQL_USERNAME"
+  user: user
+  # password is "POSTGRESQL_PASSWORD"
+  password: password
+  # host is "POSTGRESQL_HOST" and it's [container_name] in web container
+  # If you create database in local, set "localhost"
+  host: postgres
   pool: 5
 
 test:
